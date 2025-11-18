@@ -18,3 +18,11 @@ print(f"Chai ingredients after insert: {chai_ingredients}")
 last_added = chai_ingredients.pop()
 print(f"Last added ingriedient: {last_added}")
 print(f"chai: {chai_ingredients}")
+chai_ingredients.reverse()
+print(f"chai: {chai_ingredients}")
+chai_ingredients.sort()
+print(f"chai: {chai_ingredients}")
+
+sugar_levels = [1,2,3,4,5]
+print(f"Max sugar level: {max(sugar_levels)}")
+print(f"Min sugar level: {min(sugar_levels)}")
