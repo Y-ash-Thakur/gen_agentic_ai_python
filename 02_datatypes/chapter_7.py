@@ -14,3 +14,5 @@ print(f"Ratio is G :{ginger_ratio} and C:{cardamom_ratio}")
 # membership
 
 print(f"Is ginger in masala spices ? {'cloves' in masala_spices}")
+
+ 
