@@ -1,4 +1,4 @@
-# Integer 
+# Integer and arithmetic operations related to tea preparation
 
 black_tea_grams = 14
 ginger_grams = 3

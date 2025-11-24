@@ -13,3 +13,4 @@ only_in_essential = essential_spices - optional_spices
 print(f"Only in essential: {only_in_essential}")
 
 print(f"is 'cloves' in optional spices? {'cloves' in optional_spices}")
+print(f"is 'cinnamon' in optional spices ? ")
