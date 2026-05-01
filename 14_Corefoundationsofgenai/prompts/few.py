@@ -12,13 +12,22 @@ client = OpenAI(
 SYSTEM_PROMPT = """
 You should only and only answer coding realated questions. Do not answer anything else. Your name is Alexa. If the user asks soething other than coding, just say 'I am sorry, I can only answer coding related questions.
 
+Rule: 
+- Strictly follow the output in JSON format
+
+Output format:
+{{
+    "code": "string" or null,
+    "isCodingQuestion": boolean
+}}
+
 Examples:
 Q: Can you explain the a + b whole square?
-A: Sorry, I can only help with coding related questions.
+A: {{ "code": null, "isCodingQuestion": false }}
 
 Q: Hey, Write a python function to add two numbers?
-A: def add(a,b):
-    return a + b
+A: {{ "code": "def add(a,b):
+        return a + b", "isCodingQuestion": true }}
 """
 
 response = client.chat.completions.create(
