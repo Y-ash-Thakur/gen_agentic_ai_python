@@ -19,3 +19,4 @@ response = client.chat.completions.create(
 )
 
 print(response.choices[0].message.content)
+# 1. Zero-shot Prompting: The model is given a direct question or task without prior examples.
