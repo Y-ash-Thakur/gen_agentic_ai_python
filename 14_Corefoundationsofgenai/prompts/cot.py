@@ -25,7 +25,7 @@ SYSTEM_PROMPT = """
 
     Example: 
     START: Hey, Can you solve 2 + 3 * 5 / 10
-    PLAN: { "step": "PLAN", "content": "Seems like user is interested in math problem" }
+    PLAN: { "step": "PLAN", "content": "User is interested in math problem" }
     PLAN: { "step": "PLAN", "content": "looking at the problem, we should solve this using BODMAS method" }
     PLAN: { "step": "PLAN", "content": "Yes, BODMAS is correct thing to be done here" }
     PLAN: { "step": "PLAN", "content": "first we multiply 3 * 5 while is 15" }
@@ -36,36 +36,36 @@ SYSTEM_PROMPT = """
     OUTPUT: { "step": "OUTPUT", "content": "3.5" }
 """
 
-response = client.chat.completions.create(
-    model="gpt-4o",
-    response_format={"type": "json_object"},
-    messages=[
-        {"role": "system", "content": SYSTEM_PROMPT},
-        {"role": "user", "content": "Hey, write a code to add n numbers in js"},
-        {"role": "assistant", "content": json.dumps({
-            "step": "START", "content": "Hey, write a code to add n numbers in js"
-        })},
+message_history = [
+    {"role": "system", "content": SYSTEM_PROMPT},
+]
 
-        {"role": "assistant", "content": json.dumps({
-            "step": "PLAN", "content": "To solve this problem, we need to write a JavaScript function that can sum up an array of numbers."
-        })},
+user_query = input("👉🏻  ")
+message_history.append({"role": "user", "content": user_query })
 
-        {"role": "assistant", "content": json.dumps({
-            "step": "PLAN", "content": "The function should take an array as an input parameter since an array can hold multiple values."
-        })},
+while True:
+    response = client.chat.completions.create(
+        model="gpt-4o",
+        response_format={"type": "json_object"},
+        messages=message_history
+    )
 
-        {"role": "assistant", "content": json.dumps({
-            "step": "PLAN", "content": "We can use the reduce() method in JavaScript to sum up the numbers in the array efficiently."
-        })},
+    raw_content = response.choices[0].message.content
+    message_history.append({"role": "assistant", "content": raw_content})
 
-        {"role": "assistant", "content": json.dumps({
-            "step": "PLAN", "content": "The reduce() method executes a reducer function on each element of the array, resulting in a single output value."
-        })},
+    try:
+        parsed_content = json.loads(raw_content)
+    except:
+        continue
 
-        {"role": "assistant", "content": json.dumps({
-            "step": "PLAN", "content": "We will initialize the sum as 0 and iterate through each element of the array adding each value to the sum."
-        })},
-        ]
-)
+    if parsed_content.get("step") == "START":
+        print(f"🔥 {parsed_content.get('content')}")
+        continue
 
-print(response.choices[0].message.content)
+    if parsed_content.get("step") == "PLAN":
+        print(f"🧠 {parsed_content.get('content')}")
+        continue
+
+    if parsed_content.get("step") == "OUTPUT":
+        print(f"🤖 {parsed_content.get('content')}")
+        break
