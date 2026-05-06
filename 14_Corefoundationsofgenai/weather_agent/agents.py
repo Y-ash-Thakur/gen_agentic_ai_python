@@ -66,10 +66,10 @@ message_history = [
     {"role": "system", "content": SYSTEM_PROMPT},
 ]
 
-user_query = input("👉🏻  ")
-message_history.append({"role": "user", "content": user_query })
-
 while True:
+    user_query = input("👉🏻  ")
+    message_history.append({"role": "user", "content": user_query })
+    
     response = client.chat.completions.create(
         model="gpt-4o",
         response_format={"type": "json_object"},
