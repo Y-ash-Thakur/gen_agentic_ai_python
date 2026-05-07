@@ -69,41 +69,42 @@ message_history = [
 while True:
     user_query = input("👉🏻  ")
     message_history.append({"role": "user", "content": user_query })
-    
-    response = client.chat.completions.create(
-        model="gpt-4o",
-        response_format={"type": "json_object"},
-        messages=message_history
-    )
 
-    raw_content = response.choices[0].message.content
-    message_history.append({"role": "assistant", "content": raw_content})
+    while True:
+        response = client.chat.completions.create(
+            model="gpt-4o",
+            response_format={"type": "json_object"},
+            messages=message_history
+        )
 
-    try:
-        parsed_content = json.loads(raw_content)
-    except:
-        continue
+        raw_content = response.choices[0].message.content
+        message_history.append({"role": "assistant", "content": raw_content})
 
-    if parsed_content.get("step") == "START":
-        print(f"🔥 {parsed_content.get('content')}")
-        continue
+        try:
+            parsed_content = json.loads(raw_content)
+        except:
+            continue
 
-    if parsed_content.get("step") == "TOOL":
-        tool_to_call = parsed_content.get("tool")
-        tool_input = parsed_content.get("input")
-        print(f"⚙️ Calling tool {tool_to_call} with input {tool_input}")
+        if parsed_content.get("step") == "START":
+            print(f"🔥 {parsed_content.get('content')}")
+            continue
 
-        tool_response = available_tools[tool_to_call](tool_input)
-        print(f"⚙️ Calling tool {tool_to_call} with input {tool_input} = {tool_response}")
-        message_history.append({"role": "developer", "content": json.dumps(
-            { "step": "OBSERVE", "tool": tool_to_call, "input": tool_input, "output": tool_response}
-        )})
-        continue
+        if parsed_content.get("step") == "TOOL":
+            tool_to_call = parsed_content.get("tool")
+            tool_input = parsed_content.get("input")
+            print(f"⚙️ Calling tool {tool_to_call} with input {tool_input}")
 
-    if parsed_content.get("step") == "PLAN":
-        print(f"🧠 {parsed_content.get('content')}")
-        continue
+            tool_response = available_tools[tool_to_call](tool_input)
+            print(f"⚙️ Calling tool {tool_to_call} with input {tool_input} = {tool_response}")
+            message_history.append({"role": "developer", "content": json.dumps(
+                { "step": "OBSERVE", "tool": tool_to_call, "input": tool_input, "output": tool_response}
+            )})
+            continue
 
-    if parsed_content.get("step") == "OUTPUT":
-        print(f"🤖 {parsed_content.get('content')}")
-        break
+        if parsed_content.get("step") == "PLAN":
+            print(f"🧠 {parsed_content.get('content')}")
+            continue
+
+        if parsed_content.get("step") == "OUTPUT":
+            print(f"🤖 {parsed_content.get('content')}")
+            break
